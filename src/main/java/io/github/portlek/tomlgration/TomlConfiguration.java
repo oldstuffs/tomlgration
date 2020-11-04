@@ -26,6 +26,7 @@
 package io.github.portlek.tomlgration;
 
 import com.moandjiezana.toml.Toml;
+import com.moandjiezana.toml.TomlWriter;
 import java.io.File;
 import java.io.IOException;
 import org.jetbrains.annotations.NotNull;
@@ -38,14 +39,14 @@ import org.simpleyaml.exceptions.InvalidConfigurationException;
 public final class TomlConfiguration extends FileConfiguration {
 
   /**
+   * the TOMl writer.
+   */
+  private static final TomlWriter WRITER = new TomlWriter();
+
+  /**
    * the TOML instance.
    */
-  @NotNull
-  private final Toml toml;
-
-  private TomlConfiguration(@NotNull final Toml toml) {
-    this.toml = toml;
-  }
+  private final Toml toml = new Toml();
 
   /**
    * loads the given file and converts into the json configuration instance.
@@ -56,7 +57,7 @@ public final class TomlConfiguration extends FileConfiguration {
    */
   @NotNull
   public static TomlConfiguration loadConfiguration(@NotNull final File file) {
-    return TomlConfiguration.loadConfiguration(new TomlConfiguration(new Toml().read(file)), file);
+    return TomlConfiguration.loadConfiguration(new TomlConfiguration(), file);
   }
 
   /**
@@ -81,11 +82,12 @@ public final class TomlConfiguration extends FileConfiguration {
   @NotNull
   @Override
   public String saveToString() {
-    return "";
+    return TomlConfiguration.WRITER.write(this.getMapValues(false));
   }
 
   @Override
   public void loadFromString(@NotNull final String contents) {
+    Helper.loadFromString(this, contents);
   }
 
   @NotNull
@@ -100,5 +102,10 @@ public final class TomlConfiguration extends FileConfiguration {
   @Override
   protected String buildHeader() {
     return "";
+  }
+
+  @NotNull
+  Toml getToml() {
+    return this.toml;
   }
 }

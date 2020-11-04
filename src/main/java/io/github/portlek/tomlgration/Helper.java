@@ -25,6 +25,10 @@
 
 package io.github.portlek.tomlgration;
 
+import java.util.Map;
+import org.jetbrains.annotations.NotNull;
+import org.simpleyaml.configuration.ConfigurationSection;
+
 /**
  * a class that helps to conversion processes.
  */
@@ -36,4 +40,34 @@ public final class Helper {
   private Helper() {
   }
 
+  /**
+   * loads the given contents of the file into the configuration
+   *
+   * @param configuration the configuration to load.
+   * @param contents the contents to load.
+   */
+  public static void loadFromString(@NotNull final TomlConfiguration configuration, @NotNull final String contents) {
+    if (contents.isEmpty()) {
+      return;
+    }
+    Helper.convertMapToSection(configuration.getToml().read(contents).toMap(), configuration);
+  }
+
+  /**
+   * converts the given configuration section into a {@link Map}.
+   *
+   * @param input the input to convert.
+   * @param section the section to convert.
+   */
+  private static void convertMapToSection(@NotNull final Map<?, ?> input, @NotNull final ConfigurationSection section) {
+    for (final Map.Entry<?, ?> entry : input.entrySet()) {
+      final String key = entry.getKey().toString();
+      final Object value = entry.getValue();
+      if (value instanceof Map<?, ?>) {
+        Helper.convertMapToSection((Map<?, ?>) value, section.createSection(key));
+      } else {
+        section.set(key, value);
+      }
+    }
+  }
 }
