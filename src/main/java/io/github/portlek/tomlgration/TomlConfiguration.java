@@ -26,6 +26,7 @@
 package io.github.portlek.tomlgration;
 
 import com.moandjiezana.toml.Toml;
+import com.moandjiezana.toml.TomlWriter;
 import java.io.File;
 import java.io.IOException;
 import org.jetbrains.annotations.NotNull;
@@ -38,29 +39,29 @@ import org.simpleyaml.exceptions.InvalidConfigurationException;
 public final class TomlConfiguration extends FileConfiguration {
 
   /**
-   * the TOML instance.
+   * the TOMl writer.
    */
-  @NotNull
-  private final Toml toml;
-
-  private TomlConfiguration(@NotNull final Toml toml) {
-    this.toml = toml;
-  }
+  private static final TomlWriter WRITER = new TomlWriter();
 
   /**
-   * loads the given file and converts into the json configuration instance.
+   * the TOML instance.
+   */
+  private final Toml toml = new Toml();
+
+  /**
+   * loads the given file and converts into the TOML configuration instance.
    *
    * @param file the file to load.
    *
-   * @return the json configuration instance.
+   * @return the TOML configuration instance.
    */
   @NotNull
   public static TomlConfiguration loadConfiguration(@NotNull final File file) {
-    return TomlConfiguration.loadConfiguration(new TomlConfiguration(new Toml().read(file)), file);
+    return TomlConfiguration.loadConfiguration(new TomlConfiguration(), file);
   }
 
   /**
-   * loads the given file and returns the given json configuration.
+   * loads the given file and returns the given TOML configuration.
    *
    * @param config the configuration to load.
    * @param file the file to load.
@@ -81,11 +82,12 @@ public final class TomlConfiguration extends FileConfiguration {
   @NotNull
   @Override
   public String saveToString() {
-    return "";
+    return TomlConfiguration.WRITER.write(this.getMapValues(false));
   }
 
   @Override
   public void loadFromString(@NotNull final String contents) {
+    Helper.loadFromString(this, contents);
   }
 
   @NotNull
@@ -100,5 +102,10 @@ public final class TomlConfiguration extends FileConfiguration {
   @Override
   protected String buildHeader() {
     return "";
+  }
+
+  @NotNull
+  Toml getToml() {
+    return this.toml;
   }
 }
