@@ -25,6 +25,7 @@
 
 package io.github.portlek.tomlgration;
 
+import com.moandjiezana.toml.Toml;
 import java.io.File;
 import java.io.IOException;
 import org.jetbrains.annotations.NotNull;
@@ -37,6 +38,16 @@ import org.simpleyaml.exceptions.InvalidConfigurationException;
 public final class TomlConfiguration extends FileConfiguration {
 
   /**
+   * the TOML instance.
+   */
+  @NotNull
+  private final Toml toml;
+
+  private TomlConfiguration(@NotNull final Toml toml) {
+    this.toml = toml;
+  }
+
+  /**
    * loads the given file and converts into the json configuration instance.
    *
    * @param file the file to load.
@@ -45,7 +56,7 @@ public final class TomlConfiguration extends FileConfiguration {
    */
   @NotNull
   public static TomlConfiguration loadConfiguration(@NotNull final File file) {
-    return TomlConfiguration.loadConfiguration(new TomlConfiguration(), file);
+    return TomlConfiguration.loadConfiguration(new TomlConfiguration(new Toml().read(file)), file);
   }
 
   /**

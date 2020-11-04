@@ -9,7 +9,7 @@
     <artifactId>tomlgration</artifactId>
     <version>${version}</version>
 </dependency>
-```
+`````
 ```groovy
 implementation("io.github.portlek:tomlgration:${version}")
 ```
