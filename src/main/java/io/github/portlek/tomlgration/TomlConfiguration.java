@@ -49,11 +49,11 @@ public final class TomlConfiguration extends FileConfiguration {
   private final Toml toml = new Toml();
 
   /**
-   * loads the given file and converts into the json configuration instance.
+   * loads the given file and converts into the TOML configuration instance.
    *
    * @param file the file to load.
    *
-   * @return the json configuration instance.
+   * @return the TOML configuration instance.
    */
   @NotNull
   public static TomlConfiguration loadConfiguration(@NotNull final File file) {
@@ -61,7 +61,7 @@ public final class TomlConfiguration extends FileConfiguration {
   }
 
   /**
-   * loads the given file and returns the given json configuration.
+   * loads the given file and returns the given TOML configuration.
    *
    * @param config the configuration to load.
    * @param file the file to load.
